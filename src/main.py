@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for
-from flask_migrate import Migrate
+from flask_migrate import migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-MIGRATE = Migrate(app, db)
+MIGRATE = migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
@@ -34,10 +34,16 @@ def sitemap():
 def handle_hello():
 
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "msg": "Welcome back /user are you ready to shop again?"
     }
 
     return jsonify(response_body), 200
+
+@app.route('/Items', methods=['GET'])
+def handle_items_selected():
+    response_body ={
+        
+    }
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
