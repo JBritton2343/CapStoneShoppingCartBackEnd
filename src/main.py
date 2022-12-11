@@ -9,12 +9,15 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+from flask_jwt_extended import JWTManager, create_access_token
 #from models import Person
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["JWT_SECRET_KEY"] = "xystenneeri39.93kfn9303.29304ls"
+jwt = JWTManager(app)
 MIGRATE = migrate(app, db)
 db.init_app(app)
 CORS(app)
@@ -30,7 +33,7 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
+@app.route('/user', methods=['GET', "POST"])
 def handle_hello():
 
     response_body = {
@@ -39,11 +42,24 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@app.route('/Items', methods=['GET'])
+@app.route('/Items', methods=['GET', "POST"])
 def handle_items_selected():
     response_body ={
         
     }
+    return jsonify(response_body)
+
+app.route("/token", methods=["POST"])
+def create_token():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+
+    user = User.query.filter_by(email=email, password=password).first()
+    if user is None:
+        return jsonify({"msg": "Bad username or password"}), 402
+
+    access_token = create_access_token(identify=user.id)
+    return jsonify({"token": access_token, "user_id": user.id})
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
