@@ -8,6 +8,9 @@ class User(db.Model):
     address = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
+    username = db.Column(db.String(50), unique=False, nullable=False)
+    public_id = db.Column(db.String(50), unique=True)
+    admin = db.Column(db.Boolean)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     cart=db.realtionship("cart")
 
