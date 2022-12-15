@@ -133,6 +133,7 @@ def create_token():
     return jsonify({"token": access_token, "user_id": user.id})
 
 @app.route("/login")
+@token_required
 def login():
     auth=request.authorization
     if not auth or not auth.username or not auth.password:
