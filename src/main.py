@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["JWT_SECRET_KEY"] = "xystenneeri39.93kfn9303.29304ls"
+app.config["JWT_SECRET_KEY"] = "060cc30ff52444498fe0b617e4b53519"
 jwt = JWTManager(app)
 MIGRATE = migrate(app, db)
 db.init_app(app)
@@ -88,7 +88,7 @@ def get_all_users():
         user_data['email'] = user.email
         user_data['password'] = user.password
 
-@app.route('/user', methods=['POST'])
+@app.route('/Signup', methods=['POST'])
 def create_user():
     data = request.get_json()
 
