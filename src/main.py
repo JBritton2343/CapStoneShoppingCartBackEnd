@@ -74,21 +74,8 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-@app.route('/user', methods=["GET"])
-def get_all_users():
 
-    users = User.query.all()
-
-    output = []
-
-    for user in users:
-        user_data = {}
-        user_data['public_id'] = user.public_id
-        user_data['name'] = user.name
-        user_data['email'] = user.email
-        user_data['password'] = user.password
-
-@app.route('/Signup', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 def create_user():
     data = request.get_json()
 
