@@ -1,4 +1,4 @@
-from sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -12,7 +12,7 @@ class User(db.Model):
     public_id = db.Column(db.String(50), unique=True)
     admin = db.Column(db.Boolean)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    cart=db.realtionship("cart")
+    cart=db.relationship("Cart")
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -41,7 +41,7 @@ class Items(db.Model):
             "item": self.product_name,
             "price": self.unit_price
         }
-class Cart(db.model):
+class Cart(db.Model):
     id = db.Column(db.Integer, primary_key="True")
     user_id=db.Column(db.Integer, db.ForeignKey("user.id"))
-    products_id = db.Column(db.Integer, db.ForeignKey("product.id"))
+    items_id = db.Column(db.Integer, db.ForeignKey("items.id"))

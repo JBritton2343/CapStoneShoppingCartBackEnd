@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, make_response
-from flask_migrate import migrate
+from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["JWT_SECRET_KEY"] = "060cc30ff52444498fe0b617e4b53519"
 jwt = JWTManager(app)
-MIGRATE = migrate(app, db)
+MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
@@ -62,8 +62,8 @@ def handle_hello():
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
-    new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
-    db.session.add(new_user)
+    user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+    db.session.add(user)
     db.session.commit()
     
 
@@ -86,7 +86,7 @@ def create_user():
     db.session.commit()
     return jsonify({'message' : 'newuser created'})
 
-@app.route('/user/<public_id', methods=['Delete'])
+@app.route('/user/<public_id>', methods=['DELETE'])
 @token_required
 def delete_user(current_user, public_id):
     user=User.query.filter_by(public_id).first()
@@ -107,7 +107,7 @@ def handle_items_selected():
     }
     return jsonify(response_body)
 
-app.route("/token", methods=["POST"])
+@app.route("/token", methods=["POST"])
 def create_token():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
